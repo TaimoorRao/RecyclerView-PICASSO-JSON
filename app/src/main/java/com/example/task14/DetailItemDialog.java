@@ -33,6 +33,11 @@ public class DetailItemDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.detailed_item_dialog,null);
+
+        mImage = view.findViewById(R.id.image_view_detail);
+        mTextCreator = view.findViewById(R.id.text_view_creator_detail);
+        mTextLikes = view.findViewById(R.id.text_view_likes_detail);
+
         builder.setView(view)
                 .setTitle("Image Detail")
                 .setNegativeButton("back", new DialogInterface.OnClickListener() {
@@ -41,13 +46,11 @@ public class DetailItemDialog extends AppCompatDialogFragment {
 
                     }
                 });
-        Bundle args = new Bundle();
+
+        Bundle args = getArguments();
         String imageUrl = args.getString(EXTRA_URL);
         String creatorName = args.getString(EXTRA_CREATOR);
         int likeCount = args.getInt(EXTRA_LIKES, 0);
-        mImage = view.findViewById(R.id.image_view_detail);
-        mTextCreator = view.findViewById(R.id.text_view_creator_detail);
-        mTextLikes = view.findViewById(R.id.text_view_likes_detail);
         Picasso.get().load(imageUrl).fit().centerInside().into(mImage);
         mTextCreator.setText(creatorName);
         mTextLikes.setText("Likes: " + likeCount);
