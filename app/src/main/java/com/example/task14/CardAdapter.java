@@ -18,8 +18,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     public Context mContext;
     private ArrayList<CardItem> mCardList;
+    private OnItemClickListener mListener;
 
-    public CardAdapter(Context context, ArrayList<CardItem> cardList){
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
+
+    public CardAdapter(Context context, ArrayList<CardItem> cardList) {
         mContext = context;
         mCardList = cardList;
     }
@@ -64,6 +73,18 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             mImage = itemView.findViewById(R.id.image_view);
             mTextCreator = itemView.findViewById(R.id.text_view_creator);
             mTextLikes = itemView.findViewById(R.id.text_view_likes);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        int position = getAbsoluteAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            mListener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }
