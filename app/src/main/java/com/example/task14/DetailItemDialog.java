@@ -43,15 +43,18 @@ public class DetailItemDialog extends AppCompatDialogFragment {
                 .setNegativeButton("back", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                     }
                 });
 
         Bundle args = getArguments();
         String imageUrl = args.getString(EXTRA_URL);
         String creatorName = args.getString(EXTRA_CREATOR);
-        int likeCount = args.getInt(EXTRA_LIKES, 0);
-        Picasso.get().load(imageUrl).fit().centerInside().into(mImage);
+        String likeCount = args.getString(EXTRA_LIKES);
+        Picasso.get()
+                .load(imageUrl)
+                .fit()
+                .centerInside()
+                .into(mImage);
         mTextCreator.setText(creatorName);
         mTextLikes.setText("Likes: " + likeCount);
         return builder.create();

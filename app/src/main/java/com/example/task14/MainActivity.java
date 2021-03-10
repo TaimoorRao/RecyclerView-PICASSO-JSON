@@ -12,23 +12,27 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.GenericDeclaration;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements CardAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity /*implements CardAdapter.OnItemClickListener*/ {
     public static final String EXTRA_URL = "imageUrl";
     public static final String EXTRA_CREATOR = "creatorName";
     public static final String EXTRA_LIKES = "likeCount";
-    public static final String SHARED_PREFS = "sharedPrefs";
+    private static final String URL = "https://api.github.com/users";
 
     private RecyclerView mRecyclerView;
-    private CardAdapter mCardAdapter;
-    private ArrayList<CardItem> mCardList;
+//    private CardAdapter mCardAdapter;
+//    private TestJSON[] mCardList;
     private RequestQueue mRequestQueue;
 
     @Override
@@ -40,37 +44,57 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.OnIte
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mCardList = new ArrayList<>();
-
+//        mCardList = new ArrayList<>();
         mRequestQueue = Volley.newRequestQueue(this);
         parseJSON();
     }
 
     private void parseJSON() {
-        String url = "https://pixabay.com/api/?key=5303976-fd6581ad4ac165d1b75cc15b3&q=kitten&image_type=photo&pretty=true";
 
-        JsonObjectRequest json_request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+//        String url = "https://pixabay.com/api/?key=5303976-fd6581ad4ac165d1b75cc15b3&q=kitten&image_type=photo&pretty=true";
+//        JsonObjectRequest json_request = new JsonObjectRequest(Request.Method.GET, url, null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        try {
+//                            JSONArray jsonArray = response.getJSONArray("hits");
+//
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObject_hit = jsonArray.getJSONObject(i);
+//
+//                                String creatorName = jsonObject_hit.getString("user");
+//                                String imageURL = jsonObject_hit.getString("webformatURL");
+//                                int likes = jsonObject_hit.getInt("likes");
+//
+//                                mCardList.add(new CardItem(imageURL, creatorName, likes));
+//                            }
+//                            mCardAdapter = new CardAdapter(MainActivity.this, mCardList);
+//                            mRecyclerView.setAdapter(mCardAdapter);
+//                            mCardAdapter.setOnItemClickListener(MainActivity.this);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        error.printStackTrace();
+//                    }
+//                });
+//        mRequestQueue.add(json_request);
+//    }
+
+        /**
+         * Task : Deserialization
+         */
+        StringRequest json_request = new StringRequest(URL, new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray jsonArray = response.getJSONArray("hits");
-
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject_hit = jsonArray.getJSONObject(i);
-
-                                String creatorName = jsonObject_hit.getString("user");
-                                String imageURL = jsonObject_hit.getString("webformatURL");
-                                int likes = jsonObject_hit.getInt("likes");
-
-                                mCardList.add(new CardItem(imageURL, creatorName, likes));
-                            }
-                            mCardAdapter = new CardAdapter(MainActivity.this, mCardList);
-                            mRecyclerView.setAdapter(mCardAdapter);
-                            mCardAdapter.setOnItemClickListener(MainActivity.this);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    public void onResponse(String response) {
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        Gson gson = gsonBuilder.create();
+                        TestJSON[] test = gson.fromJson(response, TestJSON[].class);
+                        mRecyclerView.setAdapter(new CardAdapter(MainActivity.this, test));
                     }
                 },
                 new Response.ErrorListener() {
@@ -82,15 +106,15 @@ public class MainActivity extends AppCompatActivity implements CardAdapter.OnIte
         mRequestQueue.add(json_request);
     }
 
-    @Override
-    public void onItemClick(int position) {
-        DetailItemDialog detailItemDialog = new DetailItemDialog();
-        CardItem clickItem = mCardList.get(position);
-        Bundle args = new Bundle();
-        args.putString(EXTRA_URL, clickItem.getImageURL());
-        args.putString(EXTRA_CREATOR, clickItem.getCreator());
-        args.putInt(EXTRA_LIKES, clickItem.getLikes());
-        detailItemDialog.setArguments(args);
-        detailItemDialog.show(getSupportFragmentManager(),"Detail Item Dialog");
-    }
+//    @Override
+//    public void onItemClick(int position) {
+//        DetailItemDialog detailItemDialog = new DetailItemDialog();
+//        TestJSON clickItem = mCardList[position];
+//        Bundle args = new Bundle();
+//        args.putString(EXTRA_URL, clickItem.getAvatarUrl());
+//        args.putString(EXTRA_CREATOR, clickItem.getLogin());
+//        args.putString(EXTRA_LIKES, clickItem.getType());
+//        detailItemDialog.setArguments(args);
+//        detailItemDialog.show(getSupportFragmentManager(),"Detail Item Dialog");
+//    }
 }

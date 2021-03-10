@@ -6,10 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.toolbox.StringRequest;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -17,20 +19,19 @@ import java.util.ArrayList;
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
     public Context mContext;
-    private ArrayList<CardItem> mCardList;
-    private OnItemClickListener mListener;
+    private TestJSON[] mCard;
 
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
+//    private OnItemClickListener mListener;
+//    public interface OnItemClickListener {
+//        void onItemClick(int position);
+//    }
+//    public void setOnItemClickListener(OnItemClickListener listener) {
+//        mListener = listener;
+//    }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mListener = listener;
-    }
-
-    public CardAdapter(Context context, ArrayList<CardItem> cardList) {
+    public CardAdapter(Context context, TestJSON[] cardList) {
         mContext = context;
-        mCardList = cardList;
+        mCard = cardList;
     }
 
     @NonNull
@@ -42,24 +43,31 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        CardItem currentItem = mCardList.get(position);
+        TestJSON hit = mCard[position];
+//        CardItem currentItem = mCard.get(position);
 
-        String imageURL = currentItem.getImageURL();
-        String textCreator = currentItem.getCreator();
-        int textLikes = currentItem.getLikes();
+        String imageURL = hit.getAvatarUrl();
+        String textCreator = hit.getLogin();
+        String textLikes = hit.getType();
 
         holder.mTextCreator.setText(textCreator);
-        holder.mTextLikes.setText("Likes: " + textLikes);
+        holder.mTextLikes.setText("Type: " + textLikes);
         Picasso.get()
                 .load(imageURL)
                 .fit()
                 .centerInside()
                 .into(holder.mImage);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, hit.getLogin() + " was clicked",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return mCardList.size();
+        return mCard.length;
     }
 
     public class CardViewHolder extends RecyclerView.ViewHolder {
@@ -74,17 +82,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             mTextCreator = itemView.findViewById(R.id.text_view_creator);
             mTextLikes = itemView.findViewById(R.id.text_view_likes);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        int position = getAbsoluteAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            mListener.onItemClick(position);
-                        }
-                    }
-                }
-            });
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (mListener != null) {
+//                        int position = getAbsoluteAdapterPosition();
+//                        if (position != RecyclerView.NO_POSITION) {
+//                            mListener.onItemClick(position);
+//                        }
+//                    }
+//                }
+//            });
         }
     }
 }
