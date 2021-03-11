@@ -21,8 +21,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.GenericDeclaration;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity /*implements CardAdapter.OnItemClickListener*/ {
     public static final String EXTRA_URL = "imageUrl";
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity /*implements CardAdapter.OnI
     private static final String URL = "https://api.github.com/users";
 
     private RecyclerView mRecyclerView;
-//    private CardAdapter mCardAdapter;
+    //    private CardAdapter mCardAdapter;
 //    private TestJSON[] mCardList;
     private RequestQueue mRequestQueue;
 
@@ -84,19 +86,22 @@ public class MainActivity extends AppCompatActivity /*implements CardAdapter.OnI
 //                });
 //        mRequestQueue.add(json_request);
 //    }
-
         /**
-         * Task : Deserialization
+         * Task : Serialization
          */
         StringRequest json_request = new StringRequest(URL, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        GsonBuilder gsonBuilder = new GsonBuilder();
-                        Gson gson = gsonBuilder.create();
-                        TestJSON[] test = gson.fromJson(response, TestJSON[].class);
-                        mRecyclerView.setAdapter(new CardAdapter(MainActivity.this, test));
-                    }
-                },
+            @Override
+            public void onResponse(String response) {
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                Gson gson = gsonBuilder.create();
+                TestJSON testJSON = new TestJSON("mojombo", "https://avatars.githubusercontent.com/u/1?v=4", "User");
+                String test = gson.toJson(testJSON);
+                TestJSON testJSON1 = new TestJSON("defunkt", "https://avatars.githubusercontent.com/u/2?v=4", "User");
+                String test1 = gson.toJson(testJSON1);
+                TestJSON testJSON2 = new TestJSON("pjhyett", "https://avatars.githubusercontent.com/u/3?v=4", "User");
+                String test2 = gson.toJson(testJSON2);
+            }
+        },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -104,6 +109,25 @@ public class MainActivity extends AppCompatActivity /*implements CardAdapter.OnI
                     }
                 });
         mRequestQueue.add(json_request);
+        /**
+         * Task : Deserialization
+         */
+//        StringRequest json_request = new StringRequest(URL, new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        GsonBuilder gsonBuilder = new GsonBuilder();
+//                        Gson gson = gsonBuilder.create();
+//                        TestJSON[] test = gson.fromJson(response, TestJSON[].class);
+//                        mRecyclerView.setAdapter(new CardAdapter(MainActivity.this, test));
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        error.printStackTrace();
+//                    }
+//                });
+//        mRequestQueue.add(json_request);
     }
 
 //    @Override

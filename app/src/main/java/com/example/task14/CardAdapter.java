@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
     public Context mContext;
-    private TestJSON[] mCard;
+    private TestJSON[] mCardList;
 
 //    private OnItemClickListener mListener;
 //    public interface OnItemClickListener {
@@ -31,7 +31,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     public CardAdapter(Context context, TestJSON[] cardList) {
         mContext = context;
-        mCard = cardList;
+        mCardList = cardList;
     }
 
     @NonNull
@@ -43,8 +43,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        TestJSON hit = mCard[position];
-//        CardItem currentItem = mCard.get(position);
+        TestJSON hit = mCardList[position];
+//        CardItem currentItem = mCardList.get(position);
 
         String imageURL = hit.getAvatarUrl();
         String textCreator = hit.getLogin();
@@ -67,7 +67,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     @Override
     public int getItemCount() {
-        return mCard.length;
+        return mCardList.length;
     }
 
     public class CardViewHolder extends RecyclerView.ViewHolder {

@@ -61,8 +61,10 @@ public class TestJSON {
     @Expose
     private Boolean siteAdmin;
 
-    public TestJSON(){
-
+    public TestJSON(String login, String avatarUrl, String type){
+        this.login = login;
+        this.avatarUrl = avatarUrl;
+        this.type = type;
     }
 
     public String getLogin() {
